@@ -3,11 +3,11 @@
 //declare pins for sensors
 const int plankSensorIn = 1;
 const int liftBallSensorIn = 2;
-const int liftTopSensorIn = 3;
-const int liftBottomSensorIn = 4;
+const int liftTopSensorIn = 3;      // sensor that detects lift has reached top
+const int liftBottomSensorIn = 4;   // sensor that detects lift has reached bottom
 const int cannonSensorIn = 5;
-const int cannonTopSensorIn = 6;
-const int cannonBottomSensorIn = 7;
+const int cannonTopSensorIn = 6;    // sensor that detects cannon has reached top
+const int cannonBottomSensorIn = 7; // sensor that detects cannon has reached bottom
 
 //declare actuator pins
 const int plankServoPin = 8;
@@ -36,15 +36,14 @@ Servo chestServo;
 Servo mastServo;
 Servo cannonServo;
 
+//state is global - it identifies the current actions being undertaken
+int state;
+
 void setup() {
   //declare pin modes for sensors
-  pinMode(plankSensorIn, INPUT);
-  pinMode(liftBallSensorIn, INPUT);
-  pinMode(liftTopSensorIn, INPUT);
-  pinMode(liftBottomSensorIn, INPUT);
-  pinMode(cannonSensorIn, INPUT);
-  pinMode(cannonTopSensorIn, INPUT);
-  pinMode(cannonBottomSensorIn, INPUT);
+  for (int i = 1; i < 8; i++) { // set first 7 (sensor) pins as inputs
+    pinMode(i, INPUT);
+  }
 
   //declare state output pins
   plankServo.attach(plankServoPin);
@@ -59,15 +58,15 @@ void setup() {
   pinMode(plankSensorOut, OUTPUT);
   pinMode(liftBallSensorOut, OUTPUT);
   pinMode(cannonSensorOut, OUTPUT);
-  pinMode(state1, INPUT);
-  pinMode(state2, INPUT);
-  pinMode(state3, INPUT);
-  pinMode(state4, INPUT);
-  pinMode(state5, INPUT);
+
+  for (int i = 18; i < 23; i++) { // set the 5 states as inputs
+    pinMode(i, INPUT);
+  }
+
+  state = 1; // the initial state is 1
 }
 
 void loop() {
-  int state = 1;
   sense();
   if(digitalRead(state1) == 1){
     //state 1
@@ -211,6 +210,3 @@ void cannonOperate(){
   delay(3);
   cannonReset();
 }
-
-
-
