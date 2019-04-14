@@ -106,35 +106,6 @@ void loop() {
 	default:
 		// state was incorrect, or incorrectly read
   }
-
-  // if(digitalRead(state1) == 1){
-  //   //state 1
-  //   initialise();
-  //   state = 0;
-  // }
-  // else if(digitalRead(state2) == 1){
-  //   //state 2
-  //   plankDown();
-  //   state = 0;
-  // }
-  // else if(digitalRead(state3) == 1){
-  //   //state 3
-  //   chestDown();
-  //   liftOperate();
-  //   state = 0;
-  // }
-  // else if(digitalRead(state4) == 1){
-  //   //state 4
-  //   switchMastRight();
-  //   liftOperate();
-  //   state = 0;
-  // }
-  // else if(digitalRead(state5) == 1){
-  //   //state 5
-  //   cannonOperate();
-  //   state = 1;
-  // }
-    
 }
 
 void initialise(){
