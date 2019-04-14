@@ -38,6 +38,7 @@ Servo cannonServo;
 
 //state is global - it identifies the current actions being undertaken
 int state;
+int bitwiseState;
 
 void setup() {
   //declare pin modes for sensors
@@ -68,33 +69,71 @@ void setup() {
 
 void loop() {
   sense();
-  if(digitalRead(state1) == 1){
-    //state 1
-    initialise();
-    state = 0;
+  for(int x = 18; x < 23; x++) { // iterate over the incoming state pins
+	if(digitalRead(x) == HIGH) {
+		bitwiseState |= 1<<(x-18); // every HIGH pin is bit shifted into the integer
+	}
+  } // the end result of the for loop is one integer, representing the state
+
+  switch(bitwiseState) {
+	case 1:
+		initialise();
+		break;
+	case 2:
+		plankDown();
+		break;
+	case 3:
+		chestDown();
+		liftOperate();
+		break;
+	case 4:
+		switchMastRight();
+		liftOperate();
+		break;
+	case 5:
+		cannonOperate();
+		break;
+	case 6:
+		break;
+	case 7:
+		break;
+	case 8:
+		break;
+	case 9:
+		break;
+	case 10:
+		break;
+	default:
+		// state was incorrect, or incorrectly read
   }
-  else if(digitalRead(state2) == 1){
-    //state 2
-    plankDown();
-    state = 0;
-  }
-  else if(digitalRead(state3) == 1){
-    //state 3
-    chestDown();
-    liftOperate();
-    state = 0;
-  }
-  else if(digitalRead(state4) == 1){
-    //state 4
-    switchMastRight();
-    liftOperate();
-    state = 0;
-  }
-  else if(digitalRead(state5) == 1){
-    //state 5
-    cannonOperate();
-    state = 1;
-  }
+
+  // if(digitalRead(state1) == 1){
+  //   //state 1
+  //   initialise();
+  //   state = 0;
+  // }
+  // else if(digitalRead(state2) == 1){
+  //   //state 2
+  //   plankDown();
+  //   state = 0;
+  // }
+  // else if(digitalRead(state3) == 1){
+  //   //state 3
+  //   chestDown();
+  //   liftOperate();
+  //   state = 0;
+  // }
+  // else if(digitalRead(state4) == 1){
+  //   //state 4
+  //   switchMastRight();
+  //   liftOperate();
+  //   state = 0;
+  // }
+  // else if(digitalRead(state5) == 1){
+  //   //state 5
+  //   cannonOperate();
+  //   state = 1;
+  // }
     
 }
 
