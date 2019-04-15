@@ -37,7 +37,6 @@ Servo mastServo;
 Servo cannonServo;
 
 //state is global - it identifies the current actions being undertaken
-int state;
 int bitwiseState;
 
 void setup() {
@@ -63,8 +62,8 @@ void setup() {
   for (int i = 18; i < 23; i++) { // set the 5 states as inputs
     pinMode(i, INPUT);
   }
-
-  state = 1; // the initial state is 1
+  
+  bitwiseState = 1;  // the initial state
 }
 
 void loop() {
@@ -76,6 +75,8 @@ void loop() {
   } // the end result of the for loop is one integer, representing the state
 
   switch(bitwiseState) {
+	case 0:
+		; // when all of the state pins are LOW, just do the same thing as if in the first state
 	case 1:
 		initialise();
 		break;
@@ -104,7 +105,7 @@ void loop() {
 	case 10:
 		break;
 	default:
-		// state was incorrect, or incorrectly read
+		; // state was incorrect, or incorrectly read
   }
 }
 
