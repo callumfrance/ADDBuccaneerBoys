@@ -119,27 +119,11 @@ void initialise(){
 }
 
 void sense(){
-  if(digitalRead(plankSensorIn) == 1){
-    digitalWrite(plankSensorOut, HIGH);
-  }
-  else{
-    digitalWrite(plankSensorOut, LOW);
-  }
+  digitalWrite(plankSensorOut, digitalRead(plankSensorIn));
 
-  if(digitalRead(liftBallSensorIn) == 1){
-    digitalWrite(liftBallSensorOut, HIGH);
-  }
-  else{
-    digitalWrite(liftBallSensorOut, LOW);
-  }
-
-  if(digitalRead(cannonSensorIn) == 1){
-    digitalWrite(cannonSensorOut, HIGH);
-  }
-  else{
-    digitalWrite(cannonSensorOut, LOW);
-  }
-}
+  digitalWrite(liftBallSensorOut, digitalRead(liftBallSensorIn));
+	
+  digitalWrite(cannonSensorOut, digitalRead(cannonSensorIn));
 
 void plankDown(){
   plankServo.write(90);
