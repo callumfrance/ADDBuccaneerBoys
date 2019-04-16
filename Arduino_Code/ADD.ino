@@ -68,6 +68,7 @@ void setup() {
 
 void loop() {
   sense();
+  bitwiseState = 0;		 // empty the bitwiseState so that values can be read into it again
   for(int x = 18; x < 23; x++) { // iterate over the incoming state pins
 	if(digitalRead(x) == HIGH) {
 		bitwiseState |= 1<<(x-18); // every HIGH pin is bit shifted into the integer
