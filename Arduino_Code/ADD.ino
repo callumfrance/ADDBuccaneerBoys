@@ -67,46 +67,51 @@ void setup() {
 }
 
 void loop() {
-  sense();							// update the pins the FPGA reads from the Arduino
-  bitwiseState = 0;					// empty the bitwiseState so that values can be read into it again
-  for(int x = 18; x < 23; x++) {	// iterate over the incoming state pins
-	if(digitalRead(x) == HIGH) {
-		bitwiseState |= 1<<(x-18);	// every HIGH pin is bit shifted into the integer
-	}
+  sense();              // update the pins the FPGA reads from the Arduino
+  bitwiseState = 0;         // empty the bitwiseState so that values can be read into it again
+  for(int x = 18; x < 23; x++) {  // iterate over the incoming state pins
+  if(digitalRead(x) == HIGH) {
+    bitwiseState |= 1<<(x-18);  // every HIGH pin is bit shifted into the integer
+  }
   } // the end result of the for loop is one integer, representing the state
 
-  switch(bitwiseState) {			// the functionality of each state is given inside here
-	case 0:
-		; // when all of the state pins are LOW, just do the same thing as if in the first state
-	case 1:
-		initialise();
-		break;
-	case 2:
-		plankDown();
-		break;
-	case 3:
-		chestDown();
-		liftOperate();
-		break;
-	case 4:
-		switchMastRight();
-		liftOperate();
-		break;
-	case 5:
-		cannonOperate();
-		break;
-	case 6:
-		break;
-	case 7:
-		break;
-	case 8:
-		break;
-	case 9:
-		break;
-	case 10:
-		break;
-	default:
-		; // state was incorrect, or incorrectly read, or just 'default'
+  switch(bitwiseState) {      // the functionality of each state is given inside here
+  case 0:
+    ; // when all of the state pins are LOW, just do the same thing as if in the first state
+  case 1:
+    initialise();
+    break;
+  case 2:
+    plankDown();
+    break;
+  case 3:
+    chestDown();
+    liftForward();
+    break;
+  case 4:
+    liftReverse();
+    break;
+  case 5:
+    liftStop();
+    break;
+  case 6:
+    liftForward();
+    switchMastRight();
+    break;
+  case 7:
+    liftReverse();
+    break;
+  case 8:
+    liftStop();
+    break;
+  case 9:
+    cannonForward();
+    break;
+  case 10:
+    cannonReverse();
+    break;
+  default:
+    ; // state was incorrect, or incorrectly read, or just 'default'
   }
 }
 
