@@ -23,12 +23,16 @@ const int plankSensorOut = 15;
 const int liftBallSensorOut = 16;
 const int cannonSensorOut = 17;
 
+// declaring FPGA output pins (using bit format)
+const int outBit0 = 15;
+const int outBit1 = 16;
+
 // declare FPGA input pins
-const int state1 = 18;
-const int state2 = 19;
-const int state3 = 20;
-const int state4 = 21;
-const int state5 = 22;
+// const int state1 = 18;
+// const int state2 = 19;
+// const int state3 = 20;
+// const int state4 = 21;
+// const int state5 = 22;
 
 // create servos
 Servo plankServo;
@@ -70,9 +74,9 @@ void loop() {
   sense();              // update the pins the FPGA reads from the Arduino
   bitwiseState = 0;         // empty the bitwiseState so that values can be read into it again
   for(int x = 18; x < 23; x++) {  // iterate over the incoming state pins
-  if(digitalRead(x) == HIGH) {
-    bitwiseState |= 1<<(x-18);  // every HIGH pin is bit shifted into the integer
-  }
+    if(digitalRead(x) == HIGH) {
+        bitwiseState |= 1<<(x-18);  // every HIGH pin is bit shifted into the integer
+    }
   } // the end result of the for loop is one integer, representing the state
 
   switch(bitwiseState) {      // the functionality of each state is given inside here
@@ -130,6 +134,15 @@ void sense() {
   digitalWrite(plankSensorOut, digitalRead(plankSensorIn));
   digitalWrite(liftBallSensorOut, digitalRead(liftBallSensorIn));
   digitalWrite(cannonSensorOut, digitalRead(cannonSensorIn));
+
+// plankSensorIn = 1, liftBallSensorIn = 2, cannonSensorIn = 5
+
+  outBitwiseState = 0;         // empty the outBitwiseState so that values can be read into it again
+  for(int x = 15; x < 18; x++) {  // iterate over the incoming state pins
+    if(digitalRead(x) == HIGH) {
+        bitwiseState |= 1<<(x-15);  // every HIGH pin is bit shifted into the integer
+    }
+  } // the end result of the for loop is one integer, representing the state
 }
 
 void plankDown() {
