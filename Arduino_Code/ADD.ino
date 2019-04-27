@@ -19,13 +19,8 @@ const int cannonMotorPinForward = 13;
 const int cannonMotorPinReverse = 14;
 
 // declare FPGA output pins
-const int plankSensorOut = 15;
-const int liftBallSensorOut = 16;
-const int cannonSensorOut = 17;
-
-// declaring FPGA output pins (using bit format)
-const int outBit0 = 15;
-const int outBit1 = 16;
+const int outStateBit0 = 15;
+const int outStateBit1 = 16;
 
 // declare FPGA input pins
 // const int state1 = 18;
@@ -59,9 +54,8 @@ void setup() {
   pinMode(cannonMotorPinReverse, OUTPUT);
 
   //declare FPGA pinmodes
-  pinMode(plankSensorOut, OUTPUT);
-  pinMode(liftBallSensorOut, OUTPUT);
-  pinMode(cannonSensorOut, OUTPUT);
+  pinMode(outStateBit0, OUTPUT);
+  pinMode(outStateBit1, OUTPUT);
 
   for (int i = 18; i < 23; i++) { // set the 5 states as inputs
     pinMode(i, INPUT);
