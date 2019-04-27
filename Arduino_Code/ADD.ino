@@ -1,5 +1,9 @@
 #include <Servo.h>
 
+// ==================================================
+// Digital Pins
+// Pins 1 - 16
+// ==================================================
 // declare pins for sensors
 const int plankSensorIn = 1;
 const int liftBallSensorIn = 2;
@@ -22,13 +26,25 @@ const int cannonMotorPinReverse = 14;
 const int outStateBit0 = 15;
 const int outStateBit1 = 16;
 
+// ==================================================
+// Analog Pins
+// Pins 18 - 26
+// ==================================================
 // declare FPGA input pins
 // const int state1 = 18;
 // const int state2 = 19;
 // const int state3 = 20;
 // const int state4 = 21;
-// const int state5 = 22;
+// 22 spare
+// 23 spare
+// 24 spare
+// 25 spare
+// 26 spare
 
+
+// ==================================================
+// Other Global Definitions
+// ==================================================
 // create servos
 Servo plankServo;
 Servo chestServo;
@@ -38,16 +54,22 @@ Servo cannonServo;
 // state is global - it identifies the current actions being undertaken
 int bitwiseState;
 
+// integers used to communicate with the FPGA from the Arduino
+int activeStates;
+int outBitState;
+
 void setup() {
   // declare pin modes for sensors
   for (int i = 1; i < 8; i++) { // set first 7 (sensor) pins as inputs
     pinMode(i, INPUT);
   }
 
-  // declare state output pins
+  // plank servo pins
   plankServo.attach(plankServoPin);
   pinMode(liftMotorPinForward, OUTPUT);
   pinMode(liftMotorPinReverse, OUTPUT);
+
+  // chest servo pins
   chestServo.attach(chestServoPin);
   mastServo.attach(mastServoPin);
   pinMode(cannonMotorPinForward, OUTPUT);
@@ -57,7 +79,7 @@ void setup() {
   pinMode(outStateBit0, OUTPUT);
   pinMode(outStateBit1, OUTPUT);
 
-  for (int i = 18; i < 23; i++) { // set the 5 states as inputs
+  for (int i = 18; i < 22; i++) { // set the 4 states as inputs
     pinMode(i, INPUT);
   }
   
@@ -65,9 +87,9 @@ void setup() {
 }
 
 void loop() {
-  sense();              // update the pins the FPGA reads from the Arduino
-  bitwiseState = 0;         // empty the bitwiseState so that values can be read into it again
-  for(int x = 18; x < 23; x++) {  // iterate over the incoming state pins
+  sense();                          // update the pins the FPGA reads from the Arduino
+  bitwiseState = 0;                 // empty the bitwiseState so that values can be read into it again
+  for(int x = 18; x < 22; x++) {    // iterate over the incoming state pins
     if(digitalRead(x) == HIGH) {
         bitwiseState |= 1<<(x-18);  // every HIGH pin is bit shifted into the integer
     }
@@ -123,8 +145,8 @@ void initialise() {
 }
 
 void sense() {
-    int activeStates = 0;
-    int outBitState = 0;
+    activeStates = 0;
+    outBitState = 0;
 
 // First we need to see which sensors are currently activated (should be 1 max)
     if (digitalRead(plankSensorIn)) {
@@ -192,16 +214,16 @@ void liftReverse() {
 }
 
 void liftReset() {
-  while(digitalRead(liftBottomSensorIn) != 1) {
+  while(digitalRead(liftBottomSensorIn) != HIGH) {
     liftReverse();
   }
 }
 
 void liftOperate() {
-  while(digitalRead(liftTopSensorIn) != 1) {
+  while(digitalRead(liftTopSensorIn) != HIGH) {
     liftForward();
   }
-  delay(3);
+  delay(30);
   liftReset();
 }
 
@@ -229,15 +251,15 @@ void cannonReverse() {
 }
 
 void cannonReset() {
-    while(digitalRead(cannonBottomSensorIn) != 1) {
+    while(digitalRead(cannonBottomSensorIn) != HIGH) {
       cannonReverse();
     }
 }
 
 void cannonOperate() {
-  while(digitalRead(cannonTopSensorIn) != 1) {
+  while(digitalRead(cannonTopSensorIn) != HIGH) {
     cannonForward();
   }
-  delay(3);
+  delay(30);
   cannonReset();
 }
