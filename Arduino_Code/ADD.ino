@@ -129,20 +129,41 @@ void initialise() {
 }
 
 void sense() {
-// This function is used to write to the three pins that are sent to the FPGA
-// These out pins communicate what the Arduino is currently doing to the outside world
-  digitalWrite(plankSensorOut, digitalRead(plankSensorIn));
-  digitalWrite(liftBallSensorOut, digitalRead(liftBallSensorIn));
-  digitalWrite(cannonSensorOut, digitalRead(cannonSensorIn));
+    int activeStates = 0;
+    int outBitState = 0;
 
-// plankSensorIn = 1, liftBallSensorIn = 2, cannonSensorIn = 5
-
-  outBitwiseState = 0;         // empty the outBitwiseState so that values can be read into it again
-  for(int x = 15; x < 18; x++) {  // iterate over the incoming state pins
-    if(digitalRead(x) == HIGH) {
-        bitwiseState |= 1<<(x-15);  // every HIGH pin is bit shifted into the integer
+// First we need to see which sensors are currently activated (should be 1 max)
+    if (digitalRead(plankSensorIn)) {
+        activeStates++;
+        outBitState = 1;
     }
-  } // the end result of the for loop is one integer, representing the state
+    if (digitalRead(liftBallSensorIn)) {
+        activeStates++;
+        outBitState = 2;
+    }
+    if (digitalRead(cannonSensorIn)) {
+        activeStates++;
+        outBitState = 3;
+    }
+// Next, we need to relay the sensor state to the FPGA
+// To do this, we use binary states
+    // pin 15 is the 1's binary digit
+    // pin 16 is the 2's binary digit
+        // 00 == no sensors are active
+        // 01 == plankSensorState
+        // 10 == liftBallSensorIn
+        // 11 == cannonSensorIn
+    // do nothing on error (else statement)
+    if (activeStates < 2) {
+        int x = 15;
+        do {
+            digitalWrite(x, outBitState % 2);   // modulo
+            outBitState = outBitState / 2;      // integer division
+            x++;
+        } while (x < 17);
+    } else {
+        ; // the arduino is reading two sensors as high at the same time...
+    }
 }
 
 void plankDown() {
